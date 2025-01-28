@@ -1,8 +1,14 @@
 import express from "express";
 import morgan from "morgan";
-import swaggerUi from "swagger-ui-express";
-import swaggerJSDoc from "swagger-jsdoc";
+
 import path from "path";
+import healthRoute from "./api/v1/routes/health";
+
+// src/app.ts
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+
 
 // Initialize express
 const app = express();
@@ -10,6 +16,8 @@ const app = express();
 // Set up morgan for HTTP request logging
 app.use(morgan("combined"));
 
+// Use the health route
+app.use("/health", healthRoute);
 // Define Swagger documentation options
 const swaggerOptions = {
   swaggerDefinition: {
