@@ -21,6 +21,7 @@ export const updateEmployee = (req: Request, res: Response) => {
 };
 
 export const deleteEmployee = (req: Request, res: Response) => {
-  const success = EmployeeService.deleteEmployee(req.params.id);
-  success ? res.json({ message: "Employee deleted" }) : res.status(404).json({ message: "Employee not found" });
-};
+    const success = EmployeeService.deleteEmployee(req.params.id);
+    success ? res.json({ message: "Employee deleted successfully." }) : res.status(404).json({ message: "Employee not found" });
+  };
+  
