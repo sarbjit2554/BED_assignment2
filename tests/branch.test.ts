@@ -64,6 +64,6 @@ describe("Branch API", () => {
 
     const response = await request(app).delete(`/branches/${newBranch.body.id}`);
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe("Branch deleted");
+    expect(response.body.message).toBe("Branch deleted successfully");
   });
 });

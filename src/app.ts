@@ -3,6 +3,7 @@ import morgan from "morgan";
 import path from "path";
 import healthRoute from "./api/v1/routes/health";
 import employeeRoutes from "./api/v1/routes/employee.routes"; // Import employee routes
+import branchRoutes from "./api/v1/routes/branchRoutes"; // Import branch routes
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
@@ -19,6 +20,9 @@ app.use("/health", healthRoute);
 
 // Use the employee routes
 app.use("/employees", employeeRoutes);
+
+// Use the branch routes
+app.use("/branches", branchRoutes); // Add this line for branch routes
 
 // Define Swagger documentation options
 const swaggerOptions = {
