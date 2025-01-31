@@ -1,4 +1,4 @@
-import { Branch } from "../interfaces/branch.interface";
+import { Branch } from "../interfaces/branch.interfaces";
 
 // Temporary in-memory storage for branches
 const branches: Branch[] = [];
