@@ -23,7 +23,7 @@
       "src/**/*",
       "test/**/*",
       "config/**/*",
-      "types/**/*"  // Ensure this line is here to include your custom types
+      "types/**/*"
     ],
     "exclude": ["node_modules", "dist"]
   }
