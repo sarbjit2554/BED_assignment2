@@ -1,18 +1,57 @@
-import express from 'express';
-import morgan from 'morgan';
+import express from "express";
+import morgan from "morgan";
+import path from "path";
+import healthRoute from "./api/v1/routes/health";
+import employeeRoutes from "./api/v1/routes/employee.routes"; // Import employee routes
+import branchRoutes from "./api/v1/routes/branchRoutes"; // Import branch routes
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc");
+
+// Initialize express
 const app = express();
-const port = 3000;
 
-// Middleware to log requests
-app.use(morgan('dev'));
+// Middleware
+app.use(express.json()); // Enable JSON parsing
+app.use(morgan("combined"));
 
-// Define a route for the root URL
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
-});
+// Use the health route
+app.use("/health", healthRoute);
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+// Use the employee routes
+app.use("/employees", employeeRoutes);
+
+// Use the branch routes
+app.use("/branches", branchRoutes); // Add this line for branch routes
+
+// Define Swagger documentation options
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0", // OpenAPI version
+    info: {
+      title: "Employee API",
+      version: "1.0.0",
+      description: "API documentation for managing employee records.",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000", // API base URL
+      },
+    ],
+  },
+  apis: [path.join(__dirname, "api/v1/routes/*.ts")], // Path to your API route files
+};
+
+// Set up Swagger
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Only start the server if we're not in a test environment
+if (process.env.NODE_ENV !== "test") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
