@@ -1,30 +1,38 @@
 import { Request, Response, NextFunction } from "express";
-import { createEmployeeSchema, updateEmployeeSchema } from "../validation/employee.validation";
-import { createBranchSchema } from "../validation/branch.validation";
+import Joi from "joi";
 
-// Middleware for validating employee creation
-export const validateCreateEmployee = (req: Request, res: Response, next: NextFunction) => {
-  const { error } = createEmployeeSchema.validate(req.body, { abortEarly: false });
+// Define Joi schema for employee validation
+const employeeSchema = Joi.object({
+  name: Joi.string().min(3).max(50).required(),
+  position: Joi.string().min(2).max(50).required(),
+  email: Joi.string().email().required(),
+  branchId: Joi.number().integer().required(),
+});
+
+// Middleware function to validate creating an employee
+export const validateCreateEmployee = (req: Request, res: Response, next: NextFunction): void => {
+  const { error } = employeeSchema.validate(req.body, { abortEarly: false });
+
   if (error) {
-    return res.status(400).json({ message: error.details.map((err) => err.message) });
+    res.status(400).json({ errors: error.details.map((detail) => detail.message) });
+    return; // Ensure no further execution
   }
-  next();
+
+  next(); // Proceed if validation is successful
 };
 
-// Middleware for validating employee update
-export const validateUpdateEmployee = (req: Request, res: Response, next: NextFunction) => {
-  const { error } = updateEmployeeSchema.validate(req.body, { abortEarly: false });
-  if (error) {
-    return res.status(400).json({ message: error.details.map((err) => err.message) });
-  }
-  next();
-};
+// Middleware function to validate updating an employee (optional fields)
+export const validateUpdateEmployee = (req: Request, res: Response, next: NextFunction): void => {
+  const updateSchema = employeeSchema.fork(["name", "position", "email", "branchId"], (field) =>
+    field.optional()
+  );
 
-// Middleware for validating branch creation
-export const validateCreateBranch = (req: Request, res: Response, next: NextFunction) => {
-  const { error } = createBranchSchema.validate(req.body, { abortEarly: false });
+  const { error } = updateSchema.validate(req.body, { abortEarly: false });
+
   if (error) {
-    return res.status(400).json({ message: error.details.map((err) => err.message) });
+    res.status(400).json({ errors: error.details.map((detail) => detail.message) });
+    return; // Ensure no further execution
   }
-  next();
+
+  next(); // Proceed if validation is successful
 };
