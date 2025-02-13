@@ -15,19 +15,31 @@ export const getAllEmployees = (req: Request, res: Response) => {
 // Get Employee by ID
 export const getEmployeeById = (req: Request, res: Response) => {
   const employee = EmployeeService.getEmployeeById(req.params.id);
-  employee ? res.json(employee) : res.status(404).json({ message: "Employee not found" });
+  if (employee) {
+    res.json(employee);
+  } else {
+    res.status(404).json({ message: "Employee not found" });
+  }
 };
 
 // Update Employee
 export const updateEmployee = (req: Request, res: Response) => {
   const updatedEmployee = EmployeeService.updateEmployee(req.params.id, req.body);
-  updatedEmployee ? res.json(updatedEmployee) : res.status(404).json({ message: "Employee not found" });
+  if (updatedEmployee) {
+    res.json(updatedEmployee);
+  } else {
+    res.status(404).json({ message: "Employee not found" });
+  }
 };
 
 // Delete Employee
 export const deleteEmployee = (req: Request, res: Response) => {
   const success = EmployeeService.deleteEmployee(req.params.id);
-  success ? res.json({ message: "Employee deleted successfully." }) : res.status(404).json({ message: "Employee not found" });
+  if (success) {
+    res.json({ message: "Employee deleted successfully." });
+  } else {
+    res.status(404).json({ message: "Employee not found" });
+  }
 };
 
 // Get Employees by Branch
