@@ -2,17 +2,16 @@ import express from "express";
 import morgan from "morgan";
 import path from "path";
 import healthRoute from "./api/v1/routes/health";
-import employeeRoutes from "./api/v1/routes/employee.routes"; // Import employee routes
-import branchRoutes from "./api/v1/routes/branchRoutes"; // Import branch routes
-
-const swaggerUi = require("swagger-ui-express");
-const swaggerJSDoc = require("swagger-jsdoc");
+import employeeRoutes from "./api/v1/routes/employee.routes";
+import branchRoutes from "./api/v1/routes/branchRoutes";
+import swaggerUi from "swagger-ui-express"; // Changed to import
+import swaggerJSDoc from "swagger-jsdoc"; // Changed to import
 
 // Initialize express
 const app = express();
 
 // Middleware
-app.use(express.json()); // Enable JSON parsing
+app.use(express.json());
 app.use(morgan("combined"));
 
 // Use the health route
@@ -22,12 +21,12 @@ app.use("/health", healthRoute);
 app.use("/employees", employeeRoutes);
 
 // Use the branch routes
-app.use("/branches", branchRoutes); // Add this line for branch routes
+app.use("/branches", branchRoutes);
 
 // Define Swagger documentation options
 const swaggerOptions = {
   swaggerDefinition: {
-    openapi: "3.0.0", // OpenAPI version
+    openapi: "3.0.0",
     info: {
       title: "Employee API",
       version: "1.0.0",
@@ -35,11 +34,11 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3000", // API base URL
+        url: "http://localhost:3000",
       },
     ],
   },
-  apis: [path.join(__dirname, "api/v1/routes/*.ts")], // Path to your API route files
+  apis: [path.join(__dirname, "api/v1/routes/*.ts")],
 };
 
 // Set up Swagger
