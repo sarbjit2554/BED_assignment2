@@ -1,24 +1,19 @@
 import { Router } from "express";
 import { 
   createEmployee, 
-  getAllEmployees, 
-  getEmployeeById, 
-  updateEmployee, 
-  deleteEmployee, 
-  getEmployeesByBranch, 
-  getEmployeesByDepartment
-} from "../services/employee.service"; // Correct import for named exports
+  getAllEmployees
+} from "../services/employee.service"; // Ensure correct import
 
 const router = Router();
 
-// Example routes
-router.post("/employees", async (req, res) => {
+// POST /employees
+router.post("/", async (req, res) => {  //  Removed "/employees"
   try {
     const employee = req.body;
-    const newEmployee = createEmployee(employee); // Call service function
+    const newEmployee = createEmployee(employee); 
     res.status(201).json(newEmployee);
-  } catch (error: unknown) { // Explicitly type error as unknown
-    if (error instanceof Error) { // Check if it's an instance of Error
+  } catch (error: unknown) { 
+    if (error instanceof Error) { 
       res.status(500).json({ message: "Failed to create employee", error: error.message });
     } else {
       res.status(500).json({ message: "Unknown error occurred", error });
@@ -26,19 +21,18 @@ router.post("/employees", async (req, res) => {
   }
 });
 
-router.get("/employees", async (req, res) => {
+// GET /employees
+router.get("/", async (req, res) => {  //  Removed "/employees"
   try {
-    const employees = getAllEmployees(); // Call service function
+    const employees = getAllEmployees(); 
     res.status(200).json(employees);
-  } catch (error: unknown) { // Explicitly type error as unknown
-    if (error instanceof Error) { // Check if it's an instance of Error
+  } catch (error: unknown) { 
+    if (error instanceof Error) { 
       res.status(500).json({ message: "Failed to fetch employees", error: error.message });
     } else {
       res.status(500).json({ message: "Unknown error occurred", error });
     }
   }
 });
-
-// Other routes here...
 
 export default router;
