@@ -1,11 +1,21 @@
 import { Request, Response } from "express";
 import * as EmployeeService from "../services/employee.service";
 
-// Create Employee
-export const createEmployee = (req: Request, res: Response) => {
-  const employee = EmployeeService.createEmployee(req.body);
-  res.status(201).json(employee);
+// CreateEmployee
+export const createEmployee = async (req: Request, res: Response) => {
+  try {
+    const employee = await EmployeeService.createEmployee(req.body);
+    res.status(201).json(employee);
+  } catch (error: unknown) {
+    // Type guard to narrow the error type to an Error object
+    if (error instanceof Error) {
+      return res.status(500).json({ message: "Failed to create employee", error: error.message });
+    }
+    // Handle unexpected error type
+    return res.status(500).json({ message: "An unexpected error occurred" });
+  }
 };
+
 
 // Get All Employees
 export const getAllEmployees = (req: Request, res: Response) => {

@@ -1,40 +1,72 @@
-import { createEmployeeSchema, updateEmployeeSchema } from "../src/api/v1/validation/employee.validation";
+import { validateCreateEmployee, validateUpdateEmployee } from '../src/api/v1/middleware/validation.middleware';
+import { Request, Response, NextFunction } from 'express';
 
-describe("Employee Validation Schema", () => {
-  test("✅ Should validate a correct employee object", () => {
-    const validEmployee = {
-      name: "John Doe",
-      position: "Software Engineer",
-      email: "johndoe@example.com",
-      branchId: "123",
-    };
+describe('Employee Validation Middleware', () => {
 
-    const { error } = createEmployeeSchema.validate(validEmployee);
-    expect(error).toBeUndefined();
+  // Test validateCreateEmployee middleware
+  it('should validate create employee payload', () => {
+    const req = {
+      body: {
+        name: 'John Doe',
+        position: 'Developer',
+        department: 'Engineering',
+      },
+    } as Request;
+    const res = {} as Response;
+    const next = jest.fn();
+
+    validateCreateEmployee(req, res, next);
+
+    expect(next).toHaveBeenCalled();
   });
 
-  test("❌ Should fail if 'name' is missing", () => {
-    const invalidEmployee = {
-      position: "Software Engineer",
-      email: "johndoe@example.com",
-      branchId: "123",
-    };
+  // Test validateUpdateEmployee middleware
+  it('should validate update employee payload', () => {
+    const req = {
+      body: {
+        name: 'Jane Doe',
+        position: 'Senior Developer',
+        department: 'Engineering',
+      },
+    } as Request;
+    const res = {} as Response;
+    const next = jest.fn();
 
-    const { error } = createEmployeeSchema.validate(invalidEmployee);
-    expect(error).toBeDefined();
-    expect(error?.details?.[0]?.message).toContain('"name" is a required field');
+    validateUpdateEmployee(req, res, next);
+
+    expect(next).toHaveBeenCalled();
   });
 
-  test("✅ Should allow partial update with updateEmployeeSchema", () => {
-    const updateData = { email: "newemail@example.com" };
-    const { error } = updateEmployeeSchema.validate(updateData);
-    expect(error).toBeUndefined();
+  // Test when validateCreateEmployee fails
+  it('should return 400 if create employee payload is invalid', () => {
+    const req = { body: { name: '', position: '', department: '' } } as Request;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+    const next = jest.fn();
+
+    validateCreateEmployee(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid employee data' });
+    expect(next).not.toHaveBeenCalled();
   });
 
-  test("❌ Should fail if email is invalid", () => {
-    const invalidUpdate = { email: "invalid-email" };
-    const { error } = updateEmployeeSchema.validate(invalidUpdate);
-    expect(error).toBeDefined();
-    expect(error?.details?.[0]?.message).toContain('"email" must be a valid email');
+  // Test when validateUpdateEmployee fails
+  it('should return 400 if update employee payload is invalid', () => {
+    const req = { body: { name: '', position: '', department: '' } } as Request;
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    } as unknown as Response;
+    const next = jest.fn();
+
+    validateUpdateEmployee(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid employee data' });
+    expect(next).not.toHaveBeenCalled();
   });
+
 });

@@ -4,8 +4,8 @@ import path from "path";
 import healthRoute from "./api/v1/routes/health";
 import employeeRoutes from "./api/v1/routes/employee.routes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
-import swaggerUi from "swagger-ui-express"; // Changed to import
-import swaggerJSDoc from "swagger-jsdoc"; // Changed to import
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
 
 // Initialize express
 const app = express();
@@ -13,6 +13,11 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(morgan("combined"));
+
+// Define a root route for testing
+app.get("/", (req, res) => {
+  res.send("Welcome to the Employee API!");
+});
 
 // Use the health route
 app.use("/health", healthRoute);
