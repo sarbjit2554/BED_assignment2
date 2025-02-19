@@ -1,3 +1,5 @@
 # Node modules
 /node_modules/
-/assignment3-c08d7-firebase-adminsdk-fbsvc-b3e2ca86e2.json/
+
+# Firebase JSON key (ensure it doesn't get committed)
+assignment3-c08d7-firebase-adminsdk-fbsvc-b3e2ca86e2.json
