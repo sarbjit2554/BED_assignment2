@@ -1,6 +1,5 @@
-// src/api/v1/validation/employee.validation.ts
-
 import Joi from "joi";
+import { Request, Response, NextFunction } from "express";
 
 // Validation schema for creating an employee
 export const createEmployeeSchema = Joi.object({
@@ -47,3 +46,33 @@ export const updateEmployeeSchema = Joi.object({
     'string.base': '"branchId" should be a type of text',
   }),
 });
+
+// Middleware for creating an employee
+export const validateCreateEmployee = (req: Request, res: Response, next: NextFunction) => {
+  const { error } = createEmployeeSchema.validate(req.body, { abortEarly: false });
+  
+  if (error) {
+    res.status(400).json({
+      errors: error.details.map((detail) => detail.message),
+    });
+    return;
+  }
+  
+  next();
+};
+
+// Middleware for updating an employee
+export const validateUpdateEmployee = (req: Request, res: Response, next: NextFunction) => {
+  const { error } = updateEmployeeSchema.validate(req.body, { abortEarly: false });
+  
+  if (error) {
+    res.status(400).json({
+      errors: error.details.map((detail) => detail.message),
+    });
+    return;
+  }
+
+  next();
+};
+
+
