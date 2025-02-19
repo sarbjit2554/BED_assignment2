@@ -1,7 +1,7 @@
 // tests/employee.controller.test.ts
 import { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee } from "../src/api/v1/controllers/employee.controller";
 import * as EmployeeService from "../src/api/v1/services/employee.service"; // Adjust path if needed
-import { mockRequest, mockResponse } from "../tests/utils/test-utils"; // Make sure this is available
+import { mockRequest, mockResponse } from "../src/api/v1/utils/test-utils"; // Make sure this is available
 
 jest.mock("../src/api/v1/services/employee.service"); // Mock the service layer
 
