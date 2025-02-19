@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express"; // Import types from express
 import morgan from "morgan";
 import path from "path";
 import healthRoute from "./api/v1/routes/health";
@@ -49,6 +49,18 @@ const swaggerOptions = {
 // Set up Swagger
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Error handling middleware (global)
+app.use(
+  (err: any, req: Request, res: Response, next: NextFunction): void => { // Explicit types for params
+    console.error(err.stack); // For logging errors
+
+    const statusCode = err.status || 500; // Default to 500 if no status is set
+    const message = err.message || "Internal Server Error";
+
+    res.status(statusCode).json({ message });
+  }
+);
 
 // Only start the server if we're not in a test environment
 if (process.env.NODE_ENV !== "test") {
