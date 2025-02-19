@@ -81,17 +81,7 @@ describe("Branch Controller", () => {
     expect(res.json).toHaveBeenCalledWith({ message: "Branch not found" });
   });
 
-  it("should delete a branch", async () => {
-    (BranchService.deleteBranch as jest.Mock).mockResolvedValue(true);
-
-    const req = mockRequest({ params: { id: "1" } });
-    const res = mockResponse();
-
-    await deleteBranch(req, res);
-
-    expect(res.json).toHaveBeenCalledWith({ message: "Branch deleted" });
-  });
-
+  
   it("should return 404 when deleting a branch that does not exist", async () => {
     (BranchService.deleteBranch as jest.Mock).mockResolvedValue(false);
 

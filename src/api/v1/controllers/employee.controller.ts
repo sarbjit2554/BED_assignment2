@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import * as EmployeeService from "../services/employee.service";
+import { validateCreateEmployee, validateUpdateEmployee } from "../validation/employee.validation";
 
-// CreateEmployee
+// Create Employee
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employee = await EmployeeService.createEmployee(req.body);
