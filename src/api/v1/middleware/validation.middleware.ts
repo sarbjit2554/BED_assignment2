@@ -13,7 +13,8 @@ const employeeSchema = Joi.object({
 export const validateCreateEmployee = (req: Request, res: Response, next: NextFunction): void => {
   const { error } = employeeSchema.validate(req.body, { abortEarly: false });
 
-  if (error) {
+  // Type assertion: Declare the error type explicitly
+  if (error instanceof Error) {
     res.status(400).json({ errors: error.details.map((detail) => detail.message) });
     return; // Ensure no further execution
   }
@@ -29,7 +30,8 @@ export const validateUpdateEmployee = (req: Request, res: Response, next: NextFu
 
   const { error } = updateSchema.validate(req.body, { abortEarly: false });
 
-  if (error) {
+  // Type assertion: Declare the error type explicitly
+  if (error instanceof Error) {
     res.status(400).json({ errors: error.details.map((detail) => detail.message) });
     return; // Ensure no further execution
   }
