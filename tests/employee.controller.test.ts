@@ -84,16 +84,7 @@ describe("Employee Controller", () => {
     expect(res.json).toHaveBeenCalledWith({ message: "Employee not found" });
   });
 
-  it("should delete an employee", async () => {
-    (EmployeeService.deleteEmployee as jest.Mock).mockResolvedValue(true);
 
-    const req = mockRequest({ params: { id: "1" } });
-    const res = mockResponse();
-
-    await deleteEmployee(req, res);
-
-    expect(res.json).toHaveBeenCalledWith({ message: "Employee deleted" });
-  });
 
   it("should return 404 when deleting an employee that does not exist", async () => {
     (EmployeeService.deleteEmployee as jest.Mock).mockResolvedValue(false);

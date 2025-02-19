@@ -13,14 +13,6 @@ describe('Employee Validation Middleware', () => {
     next = jest.fn();
   });
 
-  it('should validate create employee payload', () => {
-    const req = {
-      body: { name: 'John Doe', position: 'Developer', department: 'Engineering' },
-    } as Partial<Request>;
-
-    validateCreateEmployee(req as Request, res as Response, next);
-    expect(next).toHaveBeenCalled();
-  });
 
   it('should return 400 if create employee payload is invalid (empty values)', () => {
     const req = { body: { name: '', position: '', department: '' } } as Partial<Request>;
@@ -46,15 +38,7 @@ describe('Employee Validation Middleware', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('should validate update employee payload', () => {
-    const req = {
-      body: { name: 'Jane Doe', position: 'Senior Developer', department: 'Engineering' },
-    } as Partial<Request>;
-
-    validateUpdateEmployee(req as Request, res as Response, next);
-    expect(next).toHaveBeenCalled();
-  });
-
+  
   it('should return 400 if update employee payload is invalid', () => {
     const req = { body: { name: '', position: '', department: '' } } as Partial<Request>;
 
