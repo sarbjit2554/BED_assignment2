@@ -1,18 +1,28 @@
 import { Request, Response, NextFunction } from 'express';
+import { ValidationError, NotFoundError, InternalServerError } from '../utils/error';
 
-// Custom error interface
 interface AppError extends Error {
   statusCode?: number;
 }
 
-// Error-handling middleware
+// Enhanced Error Handler Middleware
 export const errorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
-  console.error(`[ERROR] ${err.message}`);  // Log the error
+  console.error(`[ERROR] ${err.message}`);
 
-  const statusCode = err.statusCode || 500; // Default to 500 if no status is set
+  let statusCode = err.statusCode || 500;
+  let message = err.message || 'Internal Server Error';
+
+  if (err instanceof ValidationError) {
+    statusCode = 400;
+  } else if (err instanceof NotFoundError) {
+    statusCode = 404;
+  } else if (err instanceof InternalServerError) {
+    statusCode = 500;
+  }
+
   res.status(statusCode).json({
     error: {
-      message: err.message || 'Internal Server Error',
+      message,
       statusCode,
     },
   });

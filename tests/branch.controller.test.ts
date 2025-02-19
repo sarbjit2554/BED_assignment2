@@ -1,7 +1,7 @@
 // tests/branch.controller.test.ts
 import { createBranch, getAllBranches, getBranchById, updateBranch, deleteBranch } from "../src/api/v1/controllers/branch.controller";
 import * as BranchService from "../src/api/v1/services/branch.service"; // Adjust path if needed
-import { mockRequest, mockResponse } from "../tests/utils/test-utils"; // Make sure this is available
+import { mockRequest, mockResponse } from "../src/api/v1/utils/test-utils"; // Make sure this is available
 
 jest.mock("../src/api/v1/services/branch.service"); // Mock the service layer
 
