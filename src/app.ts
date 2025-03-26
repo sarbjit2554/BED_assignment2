@@ -10,6 +10,9 @@ import employeeRoutes from "./api/v1/routes/employee.routes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
 import { errorHandler } from "./api/v1/middleware/error.middleware";
 
+// Import Helmet.js
+import helmet from "helmet";
+
 // Load environment variables
 dotenv.config();
 
@@ -20,6 +23,7 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // Enable CORS
 app.use(morgan("combined"));
+app.use(helmet());  // Add Helmet for security headers
 
 // Root route for testing
 app.get("/", (req, res) => {
