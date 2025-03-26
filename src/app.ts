@@ -1,74 +1,55 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
-import swaggerJSDoc from "swagger-jsdoc";
+import jsYaml from "js-yaml"; // Import js-yaml to read YAML file
+import fs from "fs"; // To read the YAML file
+
+// Import Routes
 import healthRoute from "./api/v1/routes/health";
 import employeeRoutes from "./api/v1/routes/employee.routes";
 import branchRoutes from "./api/v1/routes/branchRoutes";
 import { errorHandler } from "./api/v1/middleware/error.middleware";
 
-// Import Helmet.js
-import helmet from "helmet";
+// Initialize Express app
+const app = express();
 
 // Load environment variables
 dotenv.config();
 
-// Initialize Express app
-const app = express();
-
-// CORS configuration (restrict access to specific origins)
-const corsOptions = {
-  origin: ["https://yourtrustedsite.com", "http://localhost:3000"], // Trusted domains
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-  credentials: true, // Allow cookies and authentication headers
-};
-
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions)); // Enable CORS with specific domains
 app.use(morgan("combined"));
-app.use(helmet());  // Add Helmet for security headers
+app.use(cors()); // Enable CORS
 
-// Root route for testing
-app.get("/", (req, res) => {
-  res.send("Welcome to the Employee API!");
-});
+// Load Swagger documentation from YAML file
+const swaggerFilePath = path.join(__dirname, '../swagger.yaml');
+console.log('Swagger YAML Path:', swaggerFilePath);
+
+if (fs.existsSync(swaggerFilePath)) {
+  console.log('swagger.yaml file found');
+  const swaggerDocument = jsYaml.load(fs.readFileSync(swaggerFilePath, 'utf8')) as Record<string, unknown>;
+
+  // Swagger Documentation Setup
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} else {
+  console.error('swagger.yaml file not found');
+}
 
 // Register API routes
 app.use("/health", healthRoute);
 app.use("/employees", employeeRoutes);
 app.use("/branches", branchRoutes);
 
-// Swagger Documentation Setup
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Employee API",
-      version: "1.0.0",
-      description: "API documentation for managing employee records.",
-    },
-    servers: [{ url: process.env.API_BASE_URL || "http://localhost:3000" }],
-  },
-  apis: [path.join(__dirname, "api/v1/routes/*.ts")],
-};
-
-const swaggerDocs = swaggerJSDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
 // Global Error Handling Middleware
 app.use(errorHandler);
 
-// Start the server (Only if not in test environment)
-if (process.env.NODE_ENV !== "test") {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-  });
-}
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
 
 export default app;
