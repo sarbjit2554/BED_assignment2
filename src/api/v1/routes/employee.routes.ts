@@ -6,8 +6,38 @@ import {
 
 const router = Router();
 
-// POST /employees
-router.post("/", async (req, res) => {  //  Removed "/employees"
+/**
+ * @swagger
+ * /employees:
+ *   post:
+ *     description: Create a new employee
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               position:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Employee created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 position:
+ *                   type: string
+ */
+router.post("/", async (req, res) => {  // Removed "/employees"
   try {
     const employee = req.body;
     const newEmployee = createEmployee(employee); 
@@ -21,8 +51,29 @@ router.post("/", async (req, res) => {  //  Removed "/employees"
   }
 });
 
-// GET /employees
-router.get("/", async (req, res) => {  //  Removed "/employees"
+/**
+ * @swagger
+ * /employees:
+ *   get:
+ *     description: Get a list of employees
+ *     responses:
+ *       200:
+ *         description: A list of employees
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   position:
+ *                     type: string
+ */
+router.get("/", async (req, res) => {  // Removed "/employees"
   try {
     const employees = getAllEmployees(); 
     res.status(200).json(employees);
