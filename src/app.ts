@@ -19,9 +19,17 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
+// CORS configuration (restrict access to specific origins)
+const corsOptions = {
+  origin: ["https://yourtrustedsite.com", "http://localhost:3000"], // Trusted domains
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  credentials: true, // Allow cookies and authentication headers
+};
+
 // Middleware
 app.use(express.json());
-app.use(cors()); // Enable CORS
+app.use(cors(corsOptions)); // Enable CORS with specific domains
 app.use(morgan("combined"));
 app.use(helmet());  // Add Helmet for security headers
 
