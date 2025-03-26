@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { 
   createEmployee, 
-  getAllEmployees
+  getAllEmployees 
 } from "../services/employee.service"; // Ensure correct import
 
 const router = Router();
@@ -10,7 +10,7 @@ const router = Router();
  * @swagger
  * /employees:
  *   post:
- *     description: Create a new employee
+ *     description: Create a new employee with a name and position
  *     requestBody:
  *       required: true
  *       content:
@@ -20,8 +20,10 @@ const router = Router();
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The name of the employee
  *               position:
  *                 type: string
+ *                 description: The position of the employee in the company
  *     responses:
  *       201:
  *         description: Employee created successfully
@@ -32,15 +34,22 @@ const router = Router();
  *               properties:
  *                 id:
  *                   type: integer
+ *                   description: Unique identifier of the employee
  *                 name:
  *                   type: string
+ *                   description: The name of the employee
  *                 position:
  *                   type: string
+ *                   description: The position of the employee in the company
+ *       400:
+ *         description: Invalid input, employee could not be created
+ *       500:
+ *         description: Internal server error
  */
-router.post("/", async (req, res) => {  // Removed "/employees"
+router.post("/", async (req, res) => { 
   try {
     const employee = req.body;
-    const newEmployee = createEmployee(employee); 
+    const newEmployee = createEmployee(employee);
     res.status(201).json(newEmployee);
   } catch (error: unknown) { 
     if (error instanceof Error) { 
@@ -55,7 +64,7 @@ router.post("/", async (req, res) => {  // Removed "/employees"
  * @swagger
  * /employees:
  *   get:
- *     description: Get a list of employees
+ *     description: Retrieve a list of all employees in the system
  *     responses:
  *       200:
  *         description: A list of employees
@@ -68,12 +77,17 @@ router.post("/", async (req, res) => {  // Removed "/employees"
  *                 properties:
  *                   id:
  *                     type: integer
+ *                     description: Unique identifier of the employee
  *                   name:
  *                     type: string
+ *                     description: The name of the employee
  *                   position:
  *                     type: string
+ *                     description: The position of the employee in the company
+ *       500:
+ *         description: Internal server error
  */
-router.get("/", async (req, res) => {  // Removed "/employees"
+router.get("/", async (req, res) => {  
   try {
     const employees = getAllEmployees(); 
     res.status(200).json(employees);
