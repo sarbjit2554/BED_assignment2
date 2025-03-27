@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "start": "ts-node src/app.ts",
-    "dev": "ts-node-dev --respawn --transpileOnly src/app.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+  "start": "ts-node src/server.ts",
+  "dev": "ts-node-dev --respawn --transpileOnly src/server.ts",    "lint": "eslint .",
+  "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
@@ -15,13 +13,21 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.7",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
+    "@types/estree": "^1.0.7",
     "@types/express": "^5.0.0",
+    "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.12.0",
+    "@types/strip-bom": "^3.0.0",
+    "@types/strip-json-comments": "^0.0.30",
     "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
@@ -48,5 +54,17 @@
     "morgan": "^1.10.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarbjit2554/BED_assignment2.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sarbjit2554/BED_assignment2/issues"
+  },
+  "homepage": "https://github.com/sarbjit2554/BED_assignment2#readme"
 }

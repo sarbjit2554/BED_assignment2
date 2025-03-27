@@ -1,57 +1,136 @@
-import express from 'express';
-import { Request, Response } from 'express';
-import * as BranchService from '../services/branch.service'; // Importing the service
+import express, { Request, Response, NextFunction } from "express";
+import {
+  createBranch,
+  getAllBranches,
+  getBranchById,
+  updateBranch,
+  deleteBranch,
+} from "../controllers/branchController";
+
+import { validateRequest } from "../middleware/validate";
+import {
+  createBranchSchema,
+  updateBranchSchema,
+  deleteBranchSchema,
+} from "../schemas/branchschemas";
 
 const router = express.Router();
 
-// Create a new branch
-router.post('/', (req: Request, res: Response) => {
-  const { name, address, phone } = req.body;
-
-  // Validation or other logic can go here
-
-  const newBranch = BranchService.createBranch({ name, address, phone });
-  res.status(201).json(newBranch);
+/**
+ * @openapi
+ * /api/v1/branches:
+ *   post:
+ *     summary: Create a new branch
+ *     tags: [Branches]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               phone:
+ *                 type: "1234567890"
+ *     responses:
+ *       201:
+ *         description: Branch created successfully
+ */
+router.post("/", validateRequest(createBranchSchema), async (req: Request, res: Response, next: NextFunction) => {
+  await createBranch(req, res, next);  
 });
 
-// Get all branches
-router.get('/', (req: Request, res: Response) => {
-  const branches = BranchService.getAllBranches();
-  res.json(branches);
+/**
+ * @openapi
+ * /api/v1/branches:
+ *   get:
+ *     summary: Get all branches
+ *     tags: [Branches]
+ *     responses:
+ *       200:
+ *         description: List of all branches
+ */
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  await getAllBranches(req, res, next);  
 });
 
-// Get a branch by ID
-router.get('/:id', (req: Request, res: Response) => {
-  const branch = BranchService.getBranchById(req.params.id);
-  
-  if (branch) {
-    res.json(branch);
-  } else {
-    res.status(404).json({ message: 'Branch not found' });
-  }
+/**
+ * @openapi
+ * /api/v1/branches/{id}:
+ *   get:
+ *     summary: Get a branch by ID
+ *     tags: [Branches]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the branch
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Branch details
+ */
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  await getBranchById(req, res, next);  
 });
 
-// Update a branch by ID
-router.put('/:id', (req: Request, res: Response) => {
-  const updates = req.body;
-  const updatedBranch = BranchService.updateBranch(req.params.id, updates);
-  
-  if (updatedBranch) {
-    res.json(updatedBranch);
-  } else {
-    res.status(404).json({ message: 'Branch not found' });
-  }
+/**
+ * @openapi
+ * /api/v1/branches/{id}:
+ *   put:
+ *     summary: Update a branch by ID
+ *     tags: [Branches]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the branch
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               phone:
+ *                 type: "1234567890"
+ *     responses:
+ *       200:
+ *         description: Branch updated successfully
+ */
+router.put("/:id", validateRequest(updateBranchSchema), async (req: Request, res: Response, next: NextFunction) => {
+  await updateBranch(req, res, next);  
 });
 
-// Delete a branch by ID
-router.delete('/:id', (req: Request, res: Response) => {
-  const success = BranchService.deleteBranch(req.params.id);
-  
-  if (success) {
-    res.json({ message: 'Branch deleted successfully' });
-  } else {
-    res.status(404).json({ message: 'Branch not found' });
-  }
+/**
+ * @openapi
+ * /api/v1/branches/{id}:
+ *   delete:
+ *     summary: Delete a branch by ID
+ *     tags: [Branches]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the branch
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Branch deleted successfully
+ */
+router.delete("/:id", validateRequest(deleteBranchSchema), async (req: Request, res: Response, next: NextFunction) => {
+  await deleteBranch(req, res, next); 
 });
 
 export default router;
